@@ -18,9 +18,9 @@ const userSchema = new Schema({
       enum: languages,
       required: true
     }],
-    locations: {
+    places: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Location"
+      ref: "Place"
     },
     lastLogin: {
       type: Date,
