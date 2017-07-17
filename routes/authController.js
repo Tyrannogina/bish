@@ -14,9 +14,17 @@ router.get('/signup', function(req, res, next) {
 router.post("/signup", (req, res, next) => {
   var username = req.body.username;
   var password = req.body.password;
+  var motherLanguage = req.body.motherLanguage;
+  var otherLanguage = req.body.otherLanguage;
 
   if (username === "" || password === "") {
   	req.flash('error', 'Indicate username and password' );
+    res.render("auth/signup", { "message": req.flash("error") });
+    return;
+  }
+
+  if (motherLanguage === otherLanguage) {
+  	req.flash('error', 'You already know that language');
     res.render("auth/signup", { "message": req.flash("error") });
     return;
   }
@@ -33,8 +41,10 @@ router.post("/signup", (req, res, next) => {
 
     var newUser = User({
       username,
-      password: hashPass
+      password: hashPass,
     });
+    newUser.languagesOffer.push(motherLanguage);
+    newUser.languagesWant.push(otherLanguage);
 
     newUser.save((err) => {
       if (err) {
@@ -64,11 +74,11 @@ router.get("/logout", (req, res) => {
   req.logout();
   delete res.locals.currentUser;
   delete req.session.passport;
-  // delete currentUser and passport properties 
+  // delete currentUser and passport properties
   // becasuse when we calling req.logout() is leaving an empty object inside both properties.
   res.redirect('/');
-  
-  
+
+
 });
 /*
 router.get("/auth/facebook",          passport.authenticate("facebook"));
