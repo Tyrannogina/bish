@@ -36,7 +36,36 @@ function startMap() {
     console.log('Browser does not support geolocation.');
   }
 
-  directionsDisplay.setMap(map);
+  return map;
+
+  // directionsDisplay.setMap(map);
 }
 
-startMap();
+$(document).ready(function() {
+
+	var map = startMap();
+
+  var geocoder = new google.maps.Geocoder();
+
+  document.getElementById('searchPlace').addEventListener('click', function() {
+    geocodeAddress(geocoder, map);
+  });
+
+  function geocodeAddress(geocoder, resultsMap) {
+	  var address = document.getElementById('address').value;
+
+	  geocoder.geocode({'address': address}, function(results, status) {
+	    if (status === 'OK') {
+	      resultsMap.setCenter(results[0].geometry.location);
+	      var marker = new google.maps.Marker({
+	        map: resultsMap,
+	        position: results[0].geometry.location
+	      });
+	      document.getElementById('latitude').value = results[0].geometry.location.lat();
+	      document.getElementById('longitude').value = results[0].geometry.location.lng();
+	    } else {
+	      alert('Geocode was not successful for the following reason: ' + status);
+	    }
+	  });
+	}
+});
