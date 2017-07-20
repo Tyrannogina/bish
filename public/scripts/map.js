@@ -1,3 +1,5 @@
+let newPlace;
+
 function initMap() {
 
   var centerBCN = {
@@ -60,7 +62,7 @@ function initMap() {
   autocomplete.addListener('place_changed', function() {
     infowindow.close();
     marker.setVisible(false);
-    var place = autocomplete.getPlace();
+    let place = autocomplete.getPlace();
     if (!place.geometry) {
       // User entered the name of a Place that was not suggested and
       // pressed the Enter key, or the Place Details request failed.
@@ -73,7 +75,7 @@ function initMap() {
       map.fitBounds(place.geometry.viewport);
     } else {
       map.setCenter(place.geometry.location);
-      map.setZoom(17);  // Why 17? Because it looks good.
+      map.setZoom(15);  // Why 17? Because it looks good.
     }
     marker.setIcon(/** @type {google.maps.Icon} */({
       url: place.icon,
@@ -94,7 +96,17 @@ function initMap() {
       ].join(' ');
     }
 
-    infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
+    newPlace = {
+      "name": place.name,
+      "lat": place.geometry.location.lat(),
+      "lng": place.geometry.location.lng()
+    };
+
+    infowindow.setContent(`<div>
+      <h3>${place.name}</h3>
+      <p>${address}</p>
+      <button onclick="sentPlace()">Join!</button>
+    </div>`);
     infowindow.open(map, marker);
   });
 
@@ -103,7 +115,22 @@ function initMap() {
 
   // Only search establishments
   autocomplete.setTypes(['establishment']);
+}
 
+function sentPlace() {
+  // console.log("Éxito!");
+  // console.log(place);
+  $.ajax({
+    url: '/secret',
+    method: 'PUT',
+    data: newPlace,
+    success: function(response) {
+      console.log(response);
+    },
+    error: function(error) {
+      console.log("error:", error);
+    }
+  });
 }
 
 $(document).ready(function() {

@@ -18,10 +18,10 @@ const userSchema = new Schema({
       enum: languages,
       required: true
     }],
-    places: {
+    places: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: "Place"
-    },
+    }],
     lastLogin: {
       type: Date,
       default: Date.now
@@ -38,6 +38,10 @@ const userSchema = new Schema({
 
 userSchema.statics.login = function login(id, callback) {
    return this.findByIdAndUpdate(id, { $set : { 'lastLogin' : Date.now() }}, { new : true }, callback);
+};
+
+userSchema.methods.joinPlace = function() {
+  console.log('joinPlace');
 };
 
 const User = mongoose.model("User", userSchema);
