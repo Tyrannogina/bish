@@ -106,7 +106,7 @@ function initMap() {
     infowindow.setContent(`<div>
       <h3>${place.name}</h3>
       <p>${address}</p>
-      <button onclick="sentPlace()">Join!</button>
+      <button onclick="sentPlace(); initMap()">Join!</button>
     </div>`);
     infowindow.open(map, marker);
   });
@@ -139,7 +139,8 @@ function initMap() {
     var infoWindowContent = [];
 
     for (i = 0; i < places.length; i++) {
-      infoWindowContent.push(places[i].name);
+      let content = `<div><h4>${places[i].name}</h4><button onclick="sentPlace()">Join!</button></div>`
+      infoWindowContent.push(content);
     }
 
     // var markers = places;
