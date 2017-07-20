@@ -2,9 +2,10 @@ const mongoose = require("mongoose");
 const Schema   = mongoose.Schema;
 
 const placeSchema = new Schema({
+  googleID: String,
   name: String,
   location: {
-    type: {type: String},
+    type: {type: String, default: "Point"},
     coordinates: [Number]
   },
   users: [{
@@ -18,12 +19,16 @@ const placeSchema = new Schema({
 
 placeSchema.index({location: '2dsphere'});
 
-placeSchema.statics.createInstance = function (place) {
-    var newPlace = new this();
-    newPlace.name = place.name;
-    // location and first user
-    newPlace.save();
-    return newPlace;
+placeSchema.statics.createInstance = function (newPlace, userID) {
+  // console.log("Voy a crear: ", newPlace);
+  // console.log("Para: ", userID);
+  var place = new this();
+  place.googleID = newPlace.googleID;
+  place.name = newPlace.name;
+  place.location.coordinates = [newPlace.lng, newPlace.lat];
+  place.users.push(userID);
+  place.save();
+  // return place;
 };
 
 const Place = mongoose.model("Place", placeSchema);

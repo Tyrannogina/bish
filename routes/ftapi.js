@@ -12,10 +12,10 @@ router.put('/secret', auth.checkLoggedIn('You must be logged in', '/login'), fun
     if (err) {
       return res.status(500).json({message: err});
     }
-    console.log('hi');
-    console.log('user', req.user);
-    console.log(req.body);
-    // user.joinPlace();
+    // console.log('hi');
+    // console.log('This is the user: ', req.user);
+    // console.log(req.body);
+    user.joinPlace(req.body);
     res.json({message: "ok"});
   });
 });

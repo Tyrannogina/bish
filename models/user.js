@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Place    = require("../models/place");
 const Schema   = mongoose.Schema;
 
 const languages = ["en", "es", "fr", "de", "it", "el", "ru", "pt"];
@@ -40,8 +41,18 @@ userSchema.statics.login = function login(id, callback) {
    return this.findByIdAndUpdate(id, { $set : { 'lastLogin' : Date.now() }}, { new : true }, callback);
 };
 
-userSchema.methods.joinPlace = function() {
-  console.log('joinPlace');
+userSchema.methods.joinPlace = function(newPlace) {
+  Place.findOne({ 'googleID': newPlace.googleID }, (err, place) => {
+    if (err) {
+      // return res.status(500).json({message: err});
+    }
+    if (!place) {
+      Place.createInstance(newPlace, this._id);
+    } else {
+      console.log("Existe el sitio");
+    }
+  });
+  // console.log(place);
 };
 
 const User = mongoose.model("User", userSchema);

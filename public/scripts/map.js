@@ -99,7 +99,8 @@ function initMap() {
     newPlace = {
       "name": place.name,
       "lat": place.geometry.location.lat(),
-      "lng": place.geometry.location.lng()
+      "lng": place.geometry.location.lng(),
+      "googleID": place.id
     };
 
     infowindow.setContent(`<div>
