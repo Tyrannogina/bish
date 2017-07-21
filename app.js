@@ -14,6 +14,7 @@ const mongoose       = require("mongoose");
 
 const index          = require('./routes/index');
 const authController = require('./routes/authController');
+const ftapi          = require('./routes/ftapi');
 
 let app = express();
 
@@ -41,7 +42,7 @@ app.use(session({
   secret           : "passport-local-strategy",
   resave           : true,
   saveUninitialized: true,
-  cookie           : { maxAge: 60000 }
+  cookie           : { maxAge: 600000 }
 }));
 
 app.use(flash());
@@ -53,6 +54,7 @@ app.use(auth.setCurrentUser);
 
 app.use('/', authController);
 app.use('/', index);
+app.use('/', ftapi);
 
 
 // catch 404 and forward to error handler
