@@ -19,15 +19,46 @@ router.get('/admin', auth.checkLoggedIn('You must be logged in', '/login'), auth
 });
 
 router.get('/secret/places/:idPlace', auth.checkLoggedIn('You must be logged in', '/login'), function(req, res, next) {
+  // Place.findOne({ '_id': req.params.idPlace }, (err, place) => {
+  //   if (err) {
+  //     return res.status(500).json({message: err});
+  //   }
+  //   res.render('place', { user: JSON.stringify(req.user), place: place });
+  // });
+  // Place.findOne({ '_id': req.params.idPlace }).populate('users').exec(function (err, user) {
+  //   console.log('Users are: ', user);
+  //   res.render('place', { user: JSON.stringify(req.user), place: req.place, dataUser: user });
+  // });
   Place.findOne({ '_id': req.params.idPlace }, (err, place) => {
     if (err) {
       return res.status(500).json({message: err});
     }
-    res.render('place', { user: JSON.stringify(req.user), place: place });
+    Place.findOne({ '_id': req.params.idPlace }).populate('users').exec(function (err, users) {
+      if (err) {
+        return res.status(500).json({message: err});
+      }
+      res.render('place', { user: JSON.stringify(req.user), place: place, users: users });
+    });
   });
-  // Place.findOne({ '_id': req.params.idPlace }).populate('_users').run(function (err, user) {
-  //   console.log('Users are: ', user._users);
-  // });
+
+
+//   router.get('/', (req, res, next) => {
+//   Media.find({}, (err, media) => {
+//     if (err) { return next(err) }
+//     Media
+//       .find({})
+//       .populate("questions.questionId")
+//       .exec((err, media) => {
+//         if (err) {
+//           next(err);
+//           return;
+//         }
+//         res.json({media});
+//       });
+// });
+// });
+//   
+
 });
 
 router.get('/secret/user', auth.checkLoggedIn('You must be logged in', '/login'), function(req, res, next) {

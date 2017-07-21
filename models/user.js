@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Place    = require("../models/place");
 const Schema   = mongoose.Schema;
 
-const languages = ["en", "es", "fr", "de", "it", "el", "ru", "pt"];
+const languages = ["gb", "es", "fr", "de", "it", "gr", "ru", "pt"];
 
 const userSchema = new Schema({
   	username: String,
