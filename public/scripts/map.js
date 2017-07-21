@@ -1,4 +1,5 @@
 let newPlace;
+let map;
 
 function initMap() {
 
@@ -7,7 +8,7 @@ function initMap() {
   	lng: 2.154007
   };
 
-  var map = new google.maps.Map(
+  map = new google.maps.Map(
     document.getElementById('map'),
     {
       zoom: 15,
@@ -29,14 +30,14 @@ function initMap() {
       map.setCenter(user_location);
 
       // Add a marker for your user location
-      var youAreHere = new google.maps.Marker({
-        position: {
-          lat: user_location.lat,
-          lng: user_location.lng
-        },
-        map: map,
-        title: "You are here"
-      });
+      // var youAreHere = new google.maps.Marker({
+      //   position: {
+      //     lat: user_location.lat,
+      //     lng: user_location.lng
+      //   },
+      //   map: map,
+      //   title: "You are here"
+      // });
 
     }, function () {
       console.log('Error in the geolocation service.');
@@ -100,86 +101,87 @@ function initMap() {
       "name": place.name,
       "lat": place.geometry.location.lat(),
       "lng": place.geometry.location.lng(),
-      "googleID": place.id
+      "googleID": place.id,
+      "icon": place.icon
     };
 
     infowindow.setContent(`<div>
       <h3>${place.name}</h3>
       <p>${address}</p>
-      <button onclick="sentPlace(); initMap()">Join!</button>
+      <button onclick="sentPlace(); getMarkers()">Join!</button>
     </div>`);
     infowindow.open(map, marker);
   });
 
-  function getMarkers() {
-    $.ajax({
-      url: '/markers',
-      method: 'GET',
-      success: showMarkers,
-      error: function(error) {
-        console.log("error:", error);
-      }
-    });
-  }
-
-  function showMarkers(places) {
-
-    var bounds = new google.maps.LatLngBounds();
-
-    // Info Window Content
-    // var infoWindowContent = [
-    //     ['<div class="info_content">' +
-    //     '<h3>London Eye</h3>' +
-    //     '<p>The London Eye is a giant Ferris wheel situated on the banks of the River Thames. The entire structure is 135 metres (443 ft) tall and the wheel has a diameter of 120 metres (394 ft).</p>' +        '</div>'],
-    //     ['<div class="info_content">' +
-    //     '<h3>Palace of Westminster</h3>' +
-    //     '<p>The Palace of Westminster is the meeting place of the House of Commons and the House of Lords, the two houses of the Parliament of the United Kingdom. Commonly known as the Houses of Parliament after its tenants.</p>' +
-    //     '</div>']
-    // ];
-    var infoWindowContent = [];
-
-    for (i = 0; i < places.length; i++) {
-      let content = `<div><h4>${places[i].name}</h4><button onclick="sentPlace()">Join!</button></div>`
-      infoWindowContent.push(content);
-    }
-
-    // var markers = places;
-    // Display multiple markers on a map
-    var infoWindow = new google.maps.InfoWindow(), marker, i;
-
-    // Loop through our array of markers & place each one on the map
-    for (i = 0; i < places.length; i++) {
-      var position = new google.maps.LatLng(places[i].location.coordinates[1], places[i].location.coordinates[0]);
-      bounds.extend(position);
-      marker = new google.maps.Marker({
-        position: position,
-        map: map,
-        title: places[i].name
-      });
-
-      // var infoWindowContent = `<div><h3>${places[i].name}</h3></div>`;
-
-      // Allow each marker to have an info window
-      google.maps.event.addListener(marker, 'click', (function(marker, i) {
-        return function() {
-          infoWindow.setContent(infoWindowContent[i]);
-          infoWindow.open(map, marker);
-        };
-      })(marker, i));
-
-      // Automatically center the map fitting all markers on the screen
-      map.fitBounds(bounds);
-    }
-
-    // Override our map zoom level once our fitBounds function runs (Make sure it only runs once)
-    var boundsListener = google.maps.event.addListener((map), 'bounds_changed', function(event) {
-        this.setZoom(14);
-        google.maps.event.removeListener(boundsListener);
-    });
-
-
-    console.log("My places are:", places);
-  }
+  // function getMarkers() {
+  //   $.ajax({
+  //     url: '/markers',
+  //     method: 'GET',
+  //     success: showMarkers,
+  //     error: function(error) {
+  //       console.log("error:", error);
+  //     }
+  //   });
+  // }
+  //
+  // function showMarkers(places) {
+  //
+  //   var bounds = new google.maps.LatLngBounds();
+  //
+  //   // Info Window Content
+  //   // var infoWindowContent = [
+  //   //     ['<div class="info_content">' +
+  //   //     '<h3>London Eye</h3>' +
+  //   //     '<p>The London Eye is a giant Ferris wheel situated on the banks of the River Thames. The entire structure is 135 metres (443 ft) tall and the wheel has a diameter of 120 metres (394 ft).</p>' +        '</div>'],
+  //   //     ['<div class="info_content">' +
+  //   //     '<h3>Palace of Westminster</h3>' +
+  //   //     '<p>The Palace of Westminster is the meeting place of the House of Commons and the House of Lords, the two houses of the Parliament of the United Kingdom. Commonly known as the Houses of Parliament after its tenants.</p>' +
+  //   //     '</div>']
+  //   // ];
+  //   var infoWindowContent = [];
+  //
+  //   for (i = 0; i < places.length; i++) {
+  //     let content = `<div><h4>${places[i].name}</h4><button onclick="sentPlace()">Join!</button></div>`;
+  //     infoWindowContent.push(content);
+  //   }
+  //
+  //   // var markers = places;
+  //   // Display multiple markers on a map
+  //   var infoWindow = new google.maps.InfoWindow(), marker, i;
+  //
+  //   // Loop through our array of markers & place each one on the map
+  //   for (i = 0; i < places.length; i++) {
+  //     var position = new google.maps.LatLng(places[i].location.coordinates[1], places[i].location.coordinates[0]);
+  //     bounds.extend(position);
+  //     marker = new google.maps.Marker({
+  //       position: position,
+  //       map: map,
+  //       title: places[i].name
+  //     });
+  //
+  //     // var infoWindowContent = `<div><h3>${places[i].name}</h3></div>`;
+  //
+  //     // Allow each marker to have an info window
+  //     google.maps.event.addListener(marker, 'click', (function(marker, i) {
+  //       return function() {
+  //         infoWindow.setContent(infoWindowContent[i]);
+  //         infoWindow.open(map, marker);
+  //       };
+  //     })(marker, i));
+  //
+  //     // Automatically center the map fitting all markers on the screen
+  //     map.fitBounds(bounds);
+  //   }
+  //
+  //   // Override our map zoom level once our fitBounds function runs (Make sure it only runs once)
+  //   var boundsListener = google.maps.event.addListener((map), 'bounds_changed', function(event) {
+  //       this.setZoom(14);
+  //       google.maps.event.removeListener(boundsListener);
+  //   });
+  //
+  //
+  //   console.log("My places are:", places);
+  // }
 
   getMarkers();
 
@@ -202,6 +204,73 @@ function sentPlace() {
       console.log("error:", error);
     }
   });
+}
+
+function getMarkers() {
+  $.ajax({
+    url: '/markers',
+    method: 'GET',
+    success: showMarkers,
+    error: function(error) {
+      console.log("error:", error);
+    }
+  });
+}
+
+function showMarkers(places) {
+
+  var bounds = new google.maps.LatLngBounds();
+
+  var infoWindowContent = [];
+
+  for (i = 0; i < places.length; i++) {
+    let content = `<div><h4><a href="/secret/places/${places[i]._id}">${places[i].name}</a></h4><button onclick="sentPlace()">Join!</button></div>`;
+    infoWindowContent.push(content);
+  }
+
+  // var markers = places;
+  // Display multiple markers on a map
+  var infoWindow = new google.maps.InfoWindow(), marker, i;
+
+  // Loop through our array of markers & place each one on the map
+  for (i = 0; i < places.length; i++) {
+    var position = new google.maps.LatLng(places[i].location.coordinates[1], places[i].location.coordinates[0]);
+    bounds.extend(position);
+    marker = new google.maps.Marker({
+      position: position,
+      map: map,
+      title: places[i].name
+    });
+
+    marker.setIcon(/** @type {google.maps.Icon} */({
+      url: places[i].icon,
+      size: new google.maps.Size(71, 71),
+      origin: new google.maps.Point(0, 0),
+      anchor: new google.maps.Point(17, 34),
+      scaledSize: new google.maps.Size(35, 35)
+    }));
+    // var infoWindowContent = `<div><h3>${places[i].name}</h3></div>`;
+
+    // Allow each marker to have an info window
+    google.maps.event.addListener(marker, 'click', (function(marker, i) {
+      return function() {
+        infoWindow.setContent(infoWindowContent[i]);
+        infoWindow.open(map, marker);
+      };
+    })(marker, i));
+
+    // Automatically center the map fitting all markers on the screen
+    map.fitBounds(bounds);
+  }
+
+  // Override our map zoom level once our fitBounds function runs (Make sure it only runs once)
+  var boundsListener = google.maps.event.addListener((map), 'bounds_changed', function(event) {
+      this.setZoom(14);
+      google.maps.event.removeListener(boundsListener);
+  });
+
+
+  console.log("My places are:", places);
 }
 
 // function getMarkers() {

@@ -42,13 +42,17 @@ userSchema.statics.login = function login(id, callback) {
 };
 
 userSchema.methods.joinPlace = function(newPlace) {
+  that = this;
   Place.findOne({ 'googleID': newPlace.googleID }, (err, place) => {
     if (err) {
       // return res.status(500).json({message: err});
     }
     if (!place) {
-      Place.createInstance(newPlace, this._id);
+      let placeID = Place.createInstance(newPlace, that._id);
+      that.places.push(placeID);
     } else {
+      that.places.push(place._id);
+      place.users.push(that._id);
       console.log("Existe el sitio");
     }
   });

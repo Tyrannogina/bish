@@ -4,6 +4,7 @@ const Schema   = mongoose.Schema;
 const placeSchema = new Schema({
   googleID: String,
   name: String,
+  icon: String,
   location: {
     type: {type: String, default: "Point"},
     coordinates: [Number]
@@ -25,10 +26,11 @@ placeSchema.statics.createInstance = function (newPlace, userID) {
   var place = new this();
   place.googleID = newPlace.googleID;
   place.name = newPlace.name;
+  place.icon = newPlace.icon;
   place.location.coordinates = [newPlace.lng, newPlace.lat];
   place.users.push(userID);
   place.save();
-  // return place;
+  return place._id;
 };
 
 const Place = mongoose.model("Place", placeSchema);
