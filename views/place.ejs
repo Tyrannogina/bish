@@ -5,12 +5,12 @@
     <h3><%= user.username %></h3>
     <p>Wants to share:
       <% user.languagesOffer.forEach(language => { %>
-        <span class="flag-icon flag-icon-<%=language%>"></span>
+        <span class="flag-icon flag-icon-<%=language%>">
       <% })%>
     </p>
     <p>Wants to learn:
       <% user.languagesWant.forEach(language => { %>
-        <span class="flag-icon flag-icon-<%=language%>"></span>
+        <span class="flag-icon flag-icon-<%=language%>">
       <% })%>
     </p>
   </article>
